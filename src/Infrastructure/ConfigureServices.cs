@@ -1,4 +1,7 @@
-﻿using Infrastructure.Persistence;
+﻿using Application.Common.Interfaces;
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -8,18 +11,24 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         private const string CONNECTION_STRING_NAME = "DefaultConnection";
 
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            AddDatabase(services, configuration);
-
-            return services;
+            services.AddDatabase(configuration);
+            services.AddServices();
         }
 
-        private static void AddDatabase(IServiceCollection services, IConfiguration configuration)
+        private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString(CONNECTION_STRING_NAME),
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+        }
+
+        private static void AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
+            services.AddTransient<IDateTime, DateTimeService>();
         }
     }
 }
