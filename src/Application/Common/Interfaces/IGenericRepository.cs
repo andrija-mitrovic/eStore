@@ -4,8 +4,8 @@ namespace Application.Common.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-		Task<IReadOnlyList<T>> GetAllAsync();
-		Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
+		Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = true);
+		Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = true);
 		Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate,
 										Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
 										string includeString,
@@ -16,7 +16,7 @@ namespace Application.Common.Interfaces
 										bool disableTracking = true);
 		Task<T?> GetByIdAsync(int id);
 		Task<T> AddAsync(T entity);
-		void UpdateAsync(T entity);
-		void DeleteAsync(T entity);
+		void Update(T entity);
+		void Delete(T entity);
 	}
 }

@@ -13,14 +13,23 @@ namespace Infrastructure.Persistence.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public async Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = true)
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            if (disableTracking) query = query.AsNoTracking();
+
+            return await query.ToListAsync();
         }
 
-        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = true)
         {
-            return await _dbContext.Set<T>().Where(predicate).ToListAsync();
+            IQueryable<T> query = _dbContext.Set<T>();
+
+            if (disableTracking) query = query.AsNoTracking();
+            if (predicate != null) query = query.Where(predicate);
+
+            return await query.ToListAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, string includeString, bool disableTracking = true)
@@ -62,12 +71,12 @@ namespace Infrastructure.Persistence.Repositories
             return entity;
         }
 
-        public void UpdateAsync(T entity)
+        public void Update(T entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            _dbContext.Set<T>().Update(entity);
         }
 
-        public void DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
         }
