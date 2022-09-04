@@ -1,4 +1,5 @@
-﻿using API.Services;
+﻿using API.Filters;
+using API.Services;
 using Application.Common.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -7,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddAPIServices(this IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(opt => opt.Filters.Add<ApiExceptionFilterAttribute>());
             services.AddSwagger();
             services.AddServices();
             services.AddHttpContext();

@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
+using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,9 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+            services.AddScoped<ApplicationDbContextInitialiser>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IDateTime, DateTimeService>();
         }
