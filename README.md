@@ -1,3 +1,3 @@
 # eStore
 
-Monolithic clean architecture built using ASP.NET Core and React
+Monolithic clean architecture with ASP.NET Core and React
