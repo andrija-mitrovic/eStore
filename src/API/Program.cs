@@ -24,6 +24,8 @@ if (app.Environment.IsDevelopment())
     }
 }
 
+app.UseCors(opt => { opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000"); });
+app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

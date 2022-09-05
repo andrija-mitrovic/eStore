@@ -1,6 +1,7 @@
 ﻿using API.Filters;
 using API.Services;
 using Application.Common.Interfaces;
+using Infrastructure.Persistence;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,6 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSwagger();
             services.AddServices();
             services.AddHttpContext();
+            services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
+            services.AddCors();
         }
 
         private static void AddServices(this IServiceCollection services)
