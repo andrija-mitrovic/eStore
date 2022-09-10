@@ -11,6 +11,7 @@ import HomePage from "../../features/home/HomePage";
 import NotFound from "../errors/NotFound";
 import ServerError from "../errors/ServerError";
 import Header from "./Header";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
