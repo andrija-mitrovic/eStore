@@ -17,6 +17,7 @@ namespace Infrastructure.Persistence
         }
 
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<Basket> Baskets => Set<Basket>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
