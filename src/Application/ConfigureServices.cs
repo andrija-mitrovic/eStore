@@ -1,4 +1,6 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.Interfaces;
+using Application.Common.Services;
 using FluentValidation;
 using MediatR;
 using System.Reflection;
@@ -15,6 +17,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+            services.AddScoped<ICookieService, CookieService>();
         }
     }
 }

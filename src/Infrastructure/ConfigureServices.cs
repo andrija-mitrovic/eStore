@@ -30,6 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<AuditableEntitySaveChangesInterceptor>();
             services.AddScoped<ApplicationDbContextInitialiser>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IDateTime, DateTimeService>();
