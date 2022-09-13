@@ -13,6 +13,15 @@ namespace Application.Common.Mappings
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<Product, CreateProductCommand>().ReverseMap();
             CreateMap<Product, UpdateProductCommand>().ReverseMap();
+
+            CreateMap<Basket, BasketDto>().ReverseMap();
+
+            CreateMap<BasketItem, BasketItemDto>()
+                .ForMember(x => x.Name, y => { y.MapFrom(z => z.Product!.Name); })
+                .ForMember(x => x.Price, y => { y.MapFrom(z => z.Product!.Price); })
+                .ForMember(x => x.PictureUrl, y => { y.MapFrom(z => z.Product!.PictureUrl); })
+                .ForMember(x => x.Brand, y => { y.MapFrom(z => z.Product!.Brand); })
+                .ForMember(x => x.Type, y => { y.MapFrom(z => z.Product!.Type); });
         }
     }
 }
