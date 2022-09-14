@@ -1,5 +1,29 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { decrement, increment } from "./counterSlice";
 
 export default function ContactPage() {
-  return <Typography variant="h2">Contact page</Typography>;
+  const dispatch = useAppDispatch();
+  const { data, title } = useAppSelector(state => state.counter);
+  return (
+    <>
+      <Typography variant="h2">
+        Data: {data} and title: {title}
+      </Typography>
+      <Button
+        onClick={() => dispatch(decrement(1))}
+        variant="contained"
+        color="error"
+      >
+        Decrement
+      </Button>
+      <Button
+        onClick={() => dispatch(increment(1))}
+        variant="contained"
+        color="error"
+      >
+        Increment
+      </Button>
+    </>
+  );
 }
