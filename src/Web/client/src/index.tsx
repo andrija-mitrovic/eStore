@@ -5,9 +5,9 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { StoreProvider } from "./app/context/StoreContext";
 import { Provider } from "react-redux";
 import { store } from "./app/store/configureStore";
+import { fetchProductsAsync } from "./features/catalog/catalogSlice";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,15 +15,15 @@ const root = ReactDOM.createRoot(
 
 export const history = createBrowserHistory();
 
+store.dispatch(fetchProductsAsync());
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Router history={history}>
-        <StoreProvider>
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </StoreProvider>
+        <Provider store={store}>
+          <App />
+        </Provider>
       </Router>
     </BrowserRouter>
   </React.StrictMode>
