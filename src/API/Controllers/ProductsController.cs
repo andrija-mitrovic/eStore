@@ -3,7 +3,7 @@ using Application.Products.Commands.CreateProduct;
 using Application.Products.Commands.DeleteProduct;
 using Application.Products.Commands.UpdateProduct;
 using Application.Products.Queries.GetProductById;
-using Application.Products.Queries.GetProducts;
+using Application.Products.Queries.GetProductsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,10 +11,18 @@ namespace API.Controllers
     public class ProductsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<ProductDto>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProductsWithPagination([FromQuery] GetProductsWithPaginationQuery query)
         {
-            return await Mediator.Send(new GetProductsQuery());
+            var products = await Mediator.Send(query);
+
+            return products.Items!;
         }
+
+        //[HttpGet]
+        //public async Task<ActionResult<List<ProductDto>>> GetProducts()
+        //{
+        //   return await Mediator.Send(new GetProductsQuery());
+        //}
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
