@@ -4,29 +4,30 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Products.Queries.GetProductById
 {
     internal sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<GetProductByIdQueryHandler> _logger;
 
         public GetProductByIdQueryHandler(
-            IProductRepository productRepository, 
+            IApplicationDbContext context,
             IMapper mapper, 
             ILogger<GetProductByIdQueryHandler> logger)
         {
-            _productRepository = productRepository;
+            _context = context;
             _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(request.Id);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (product == null)
             {

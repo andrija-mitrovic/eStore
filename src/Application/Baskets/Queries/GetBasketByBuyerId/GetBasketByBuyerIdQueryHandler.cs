@@ -5,22 +5,23 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Baskets.Queries.GetBasketByBuyerId
 {
     public class GetBasketByBuyerIdQueryHandler : IRequestHandler<GetBasketByBuyerIdQuery, BasketDto>
     {
-        private readonly IBasketRepository _basketRepository;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<GetBasketByBuyerIdQueryHandler> _logger;
 
         public GetBasketByBuyerIdQueryHandler(
-            IBasketRepository basketRepository, 
+            IApplicationDbContext context,
             IMapper mapper, 
             ILogger<GetBasketByBuyerIdQueryHandler> logger)
         {
-            _basketRepository = basketRepository;
+            _context = context;
             _mapper = mapper;
             _logger = logger;
         }
@@ -33,7 +34,10 @@ namespace Application.Baskets.Queries.GetBasketByBuyerId
                 throw new BuyerIdNullException($"{nameof(request.BuyerId)} is null or empty");
             }
 
-            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);
+            var basket = await _context.Baskets.Include(x => x.Items)
+                                               .ThenInclude(x => x.Product)
+                                               .AsNoTracking()
+                                               .FirstOrDefaultAsync(x => x.BuyerId == request.BuyerId);
 
             if (basket == null)
             {
