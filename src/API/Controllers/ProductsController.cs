@@ -3,6 +3,7 @@ using Application.Products.Commands.CreateProduct;
 using Application.Products.Commands.DeleteProduct;
 using Application.Products.Commands.UpdateProduct;
 using Application.Products.Queries.GetProductById;
+using Application.Products.Queries.GetProductsBrandsAndTypes;
 using Application.Products.Queries.GetProductsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,12 @@ namespace API.Controllers
             await Mediator.Send(new DeleteProductCommand() { Id = id });
 
             return NoContent();
+        }
+
+        [HttpGet("filters")]
+        public async Task<ActionResult> GetFilters()
+        {
+            return Ok(await Mediator.Send(new GetProductsBrandsAndTypesQuery()));
         }
     }
 }
