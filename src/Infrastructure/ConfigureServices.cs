@@ -1,8 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -16,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddDatabase(configuration);
             services.AddServices();
+            services.AddIdentity();
         }
 
         private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
@@ -35,6 +38,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
             services.AddTransient<IDateTime, DateTimeService>();
+        }
+
+        private static void AddIdentity(this IServiceCollection services)
+        {
+            services.AddIdentityCore<ApplicationUser>()
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
         }
     }
 }
