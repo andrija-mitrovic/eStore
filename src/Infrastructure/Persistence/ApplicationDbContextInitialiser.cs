@@ -1,4 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Constants;
+using Domain.Entities;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -7,13 +10,19 @@ namespace Infrastructure.Persistence
     public class ApplicationDbContextInitialiser
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ApplicationDbContextInitialiser> _logger;
 
         public ApplicationDbContextInitialiser(
-            ApplicationDbContext context, 
+            ApplicationDbContext context,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
             ILogger<ApplicationDbContextInitialiser> logger)
         {
             _context = context;
+            _roleManager = roleManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -48,12 +57,43 @@ namespace Infrastructure.Persistence
 
         public async Task TrySeedAsync()
         {
+            //Default roles
+            var adminRole = new IdentityRole() { Name = RolesConstants.ADMIN, NormalizedName = RolesConstants.ADMIN.ToUpper() };
+            var memberRole = new IdentityRole() { Name = RolesConstants.MEMBER, NormalizedName = RolesConstants.ADMIN.ToUpper() };
+
+            await CreateRole(adminRole);
+            await CreateRole(memberRole);
+
+            // Default users
+            var admin = new ApplicationUser { UserName = "admin", Email = "admin@test.com" };
+            var user = new ApplicationUser { UserName = "bob", Email = "bob@test.com" };
+
+            if (!_userManager.Users.Any())
+            {
+                await CreateUserAndAssingRoles(admin, AuthorizationConstants.DEFAULT_PASSWORD, new[] { RolesConstants.MEMBER, RolesConstants.ADMIN });
+                await CreateUserAndAssingRoles(user, AuthorizationConstants.DEFAULT_PASSWORD, new[] { RolesConstants.MEMBER });
+            }
+
             if (_context.Products.Any()) return;
 
             List<Product> products = GetProducts();
 
             await _context.Products.AddRangeAsync(products);
             await _context.SaveChangesAsync();
+        }
+
+        private async Task CreateRole(IdentityRole memberRole)
+        {
+            if (_roleManager.Roles.All(r => r.Name != memberRole.Name))
+            {
+                await _roleManager.CreateAsync(memberRole);
+            }
+        }
+
+        private async Task CreateUserAndAssingRoles(ApplicationUser user, string password, string[] roles)
+        {
+            await _userManager.CreateAsync(user, password);
+            await _userManager.AddToRolesAsync(user, roles);
         }
 
         private List<Product> GetProducts()
