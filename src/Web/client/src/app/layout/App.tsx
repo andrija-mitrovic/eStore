@@ -19,9 +19,11 @@ import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { setBasket } from "../../features/basket/basketSlice";
 import { useAppDispatch } from "../store/configureStore";
+import Login from "../../features/account/Login";
+import Register from "../../features/account/Register";
 
 function App() {
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ function App() {
     setDarkMode(!darkMode);
   }
 
-  if (loading) return <LoadingComponent message='Initialising app...' />
+  if (loading) return <LoadingComponent message="Initialising app..." />;
 
   return (
     <ThemeProvider theme={theme}>
@@ -68,6 +70,8 @@ function App() {
           <Route path="/server-error" component={ServerError} />
           <Route path="/basket" component={BasketPage} />
           <Route path="/checkout" component={CheckoutPage} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           <Route component={NotFound} />
         </Switch>
       </Container>
