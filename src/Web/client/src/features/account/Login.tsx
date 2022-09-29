@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -7,19 +6,25 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container, Paper } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Link } from "react-router-dom";
-import agent from "../../app/api/agent";
+import { Link, useHistory } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { signInUser } from "./accountSlice";
 
 export default function Login() {
+  const history = useHistory();
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+    formState: { isSubmitting, errors, isValid },
+  } = useForm({
+    mode: "all",
+  });
 
   async function submitForm(data: FieldValues) {
-    await agent.Account.login(data);
+    await dispatch(signInUser(data));
+    history.push("/catalog");
   }
 
   return (
@@ -39,15 +44,20 @@ export default function Login() {
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      <Box component="form" onSubmit={handleSubmit(submitForm)} noValidate sx={{ mt: 1 }}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(submitForm)}
+        noValidate
+        sx={{ mt: 1 }}
+      >
         <TextField
           margin="normal"
           fullWidth
           label="Username"
           autoFocus
           {...register("username", { required: "Username is required" })}
-          // error={!!errors.username}
-          // helperText={errors?.username?.message?.toString()}
+          error={!!errors.username}
+          helperText={errors?.username?.message?.toString()}
         />
         <TextField
           margin="normal"
@@ -55,11 +65,11 @@ export default function Login() {
           label="Password"
           type="password"
           {...register("password", { required: "Password is required" })}
-          //  error={!!errors.password}
-          //  helperText={errors?.password?.message?.toString()}
+          error={!!errors.password}
+          helperText={errors?.password?.message?.toString()}
         />
         <LoadingButton
-          //   disabled={!isValid}
+          disabled={!isValid}
           loading={isSubmitting}
           type="submit"
           fullWidth
