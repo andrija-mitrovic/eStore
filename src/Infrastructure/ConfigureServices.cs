@@ -1,12 +1,16 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Constants;
+using Application.Common.Interfaces;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,8 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDatabase(configuration);
-            services.AddServices();
             services.AddIdentity();
+            services.AddServices();
         }
 
         private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
@@ -44,9 +48,25 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddIdentity(this IServiceCollection services)
         {
-            services.AddIdentityCore<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentityCore<ApplicationUser>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+            })
+           .AddRoles<IdentityRole>()
+           .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(opt =>
+                    {
+                        opt.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthorizationConstants.JWT_SECRET_KEY))
+                        };
+                    });
+            services.AddAuthorization();
         }
     }
 }
