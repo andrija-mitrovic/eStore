@@ -10,9 +10,9 @@ namespace API.Controllers
     public class BasketsController : ApiControllerBase
     {
         [HttpGet(Name = "GetBasket")]
-        public async Task<ActionResult<BasketDto>> Index()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            var buyerId = Request.Cookies[CookieConstants.KEY];
+            var buyerId = GetBuyerId();
 
             return await Mediator.Send(new GetBasketByBuyerIdQuery() { BuyerId = buyerId });
         }
@@ -24,7 +24,7 @@ namespace API.Controllers
             {
                 ProductId = productId,
                 Quantity = quantity,
-                BuyerId = Request.Cookies[CookieConstants.KEY]
+                BuyerId = GetBuyerId()
             };
 
             return CreatedAtRoute("GetBasket", await Mediator.Send(command));
@@ -37,12 +37,17 @@ namespace API.Controllers
             {
                 ProductId = productId,
                 Quantity = quantity,
-                BuyerId = Request.Cookies[CookieConstants.KEY]
+                BuyerId = GetBuyerId()
             };
 
             await Mediator.Send(command);
 
             return NoContent();
+        }
+
+        private string? GetBuyerId()
+        {
+            return User.Identity?.Name ?? Request.Cookies[CookieConstants.KEY];
         }
     }
 }

@@ -6,6 +6,7 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Baskets.Commands.AddBasketItem
@@ -17,6 +18,7 @@ namespace Application.Baskets.Commands.AddBasketItem
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICookieService _cookieService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<AddBasketItemCommandHandler> _logger;
 
         public AddBasketItemCommandHandler(
@@ -25,6 +27,7 @@ namespace Application.Baskets.Commands.AddBasketItem
             IUnitOfWork unitOfWork,
             ICookieService cookieService, 
             IMapper mapper, 
+            IHttpContextAccessor httpContextAccessor,
             ILogger<AddBasketItemCommandHandler> logger)
         {
             _basketRepository = basketRepository;
@@ -32,11 +35,18 @@ namespace Application.Baskets.Commands.AddBasketItem
             _unitOfWork = unitOfWork;
             _cookieService = cookieService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
         }
 
-        public async Task<BasketDto> Handle(AddBasketItemCommand request, CancellationToken cancellationToken)
+        public async Task<BasketDto?> Handle(AddBasketItemCommand request, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrWhiteSpace(request.BuyerId))
+            {
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieConstants.KEY);
+                return null;
+            }
+
             var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);
 
             if (basket == null)
@@ -68,9 +78,13 @@ namespace Application.Baskets.Commands.AddBasketItem
 
         private async Task<Basket> CreateBasket()
         {
-            var buyerId = Guid.NewGuid().ToString();
+            var buyerId = _httpContextAccessor.HttpContext.User.Identity?.Name;
 
-            _cookieService.AddCookie(CookieConstants.KEY, buyerId);
+            if (string.IsNullOrWhiteSpace(buyerId))
+            {
+                buyerId = Guid.NewGuid().ToString();
+                _cookieService.AddCookie(CookieConstants.KEY, buyerId);
+            }
 
             var basket = new Basket { BuyerId = buyerId };
 
