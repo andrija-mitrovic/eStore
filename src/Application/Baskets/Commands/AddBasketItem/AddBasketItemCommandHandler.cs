@@ -44,7 +44,6 @@ namespace Application.Baskets.Commands.AddBasketItem
             if (string.IsNullOrWhiteSpace(request.BuyerId))
             {
                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieConstants.KEY);
-                return null;
             }
 
             var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);

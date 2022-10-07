@@ -27,6 +27,7 @@ namespace API.Controllers
             IMapper mapper)
         {
             _userManager = userManager;
+            _context = context;
             _tokenService = tokenService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -47,7 +48,10 @@ namespace API.Controllers
 
             if (anonBasket != null)
             {
-                if (userBasket != null) { _context.Baskets.Remove(userBasket); }
+                if (userBasket != null) 
+                { 
+                    _context.Baskets.Remove(userBasket); 
+                }
                 anonBasket.BuyerId = user.UserName;
                 Response.Cookies.Delete(CookieConstants.KEY);
                 await _unitOfWork.SaveChangesAsync();
@@ -93,10 +97,13 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity?.Name);
 
+            var userBasket = await RetrieveBasket(User?.Identity?.Name!);
+
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateTokenAsync(user.UserName, user.Email)
+                Token = await _tokenService.GenerateTokenAsync(user.UserName, user.Email),
+                Basket = _mapper.Map<BasketDto>(userBasket)
             };
         }
 
