@@ -1,22 +1,23 @@
 ﻿using Application.Common.Constants;
 using Domain.Entities;
-using Infrastructure.Identity;
+using Role = Infrastructure.Identity.Role;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Infrastructure.Identity;
 
 namespace Infrastructure.Persistence
 {
     public class ApplicationDbContextInitialiser
     {
         private readonly ApplicationDbContext _context;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ApplicationDbContextInitialiser> _logger;
 
         public ApplicationDbContextInitialiser(
             ApplicationDbContext context,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<Role> roleManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ApplicationDbContextInitialiser> logger)
         {
@@ -58,8 +59,8 @@ namespace Infrastructure.Persistence
         public async Task TrySeedAsync()
         {
             //Default roles
-            var adminRole = new IdentityRole() { Name = RolesConstants.ADMIN, NormalizedName = RolesConstants.ADMIN.ToUpper() };
-            var memberRole = new IdentityRole() { Name = RolesConstants.MEMBER, NormalizedName = RolesConstants.ADMIN.ToUpper() };
+            var adminRole = new Role() { Name = RolesConstants.ADMIN, NormalizedName = RolesConstants.ADMIN.ToUpper() };
+            var memberRole = new Role() { Name = RolesConstants.MEMBER, NormalizedName = RolesConstants.ADMIN.ToUpper() };
 
             await CreateRole(adminRole);
             await CreateRole(memberRole);
@@ -82,7 +83,7 @@ namespace Infrastructure.Persistence
             await _context.SaveChangesAsync();
         }
 
-        private async Task CreateRole(IdentityRole memberRole)
+        private async Task CreateRole(Role memberRole)
         {
             if (_roleManager.Roles.All(r => r.Name != memberRole.Name))
             {

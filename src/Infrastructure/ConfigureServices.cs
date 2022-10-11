@@ -6,7 +6,6 @@ using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -52,7 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 opt.User.RequireUniqueEmail = true;
             })
-           .AddRoles<IdentityRole>()
+           .AddRoles<Role>()
            .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(opt =>

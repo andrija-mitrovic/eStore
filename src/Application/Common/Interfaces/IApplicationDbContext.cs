@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.OrderAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces
@@ -7,5 +8,6 @@ namespace Application.Common.Interfaces
     {
         DbSet<Product> Products { get; }
         DbSet<Basket> Baskets { get; }
+        DbSet<Order> Orders { get; }
     }
 }
