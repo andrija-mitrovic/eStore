@@ -37,6 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ApplicationDbContextInitialiser>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IDateTime, DateTimeService>();
