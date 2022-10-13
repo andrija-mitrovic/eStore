@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Baskets.Commands.AddBasketItem
 {
-    public class AddBasketItemCommandHandler : IRequestHandler<AddBasketItemCommand, BasketDto>
+    public class AddBasketItemCommandHandler : IRequestHandler<AddBasketItemCommand, BasketDto?>
     {
         private readonly IBasketRepository _basketRepository;
         private readonly IProductRepository _productRepository;
