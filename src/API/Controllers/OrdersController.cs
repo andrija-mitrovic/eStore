@@ -33,5 +33,10 @@ namespace API.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Order>> CreateOrder(CreateOrderCommand command)
+        {
+            return CreatedAtAction("GetOrder", await Mediator.Send(command));
+        }
     }
 }
