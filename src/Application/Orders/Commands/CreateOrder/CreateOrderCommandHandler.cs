@@ -44,10 +44,35 @@ namespace Application.Orders.Commands.CreateOrder
             if (basket == null)
             {
                 _logger.LogError(nameof(Basket) + " with Buyer Id: {BuyerId} was not found.", request.BuyerId);
-                throw new NotFoundException(nameof(Product), request.BuyerId!);
+                throw new NotFoundException($"{nameof(Basket)} with Buyer Id {request.BuyerId!} was not found.");
             }
 
             var items = new List<OrderItem>();
+
+            //var productIds = basket.Items.Select(x => x.ProductId);
+            //var productItems = await _productRepository.GetAsync(x => productIds.Contains(x.Id));
+
+            //foreach (var item in basket.Items)
+            //{
+            //    var productItem = productItems.FirstOrDefault(x => x.Id == item.ProductId);
+
+            //    var itemOrdered = new ProductItemOrdered
+            //    {
+            //        ProductId = productItem!.Id,
+            //        Name = productItem.Name,
+            //        PictureUrl = productItem.PictureUrl
+            //    };
+
+            //    var orderItem = new OrderItem
+            //    {
+            //        ItemOrdered = itemOrdered,
+            //        Price = productItem.Price,
+            //        Quantity = item.Quantity
+            //    };
+
+            //    items.Add(orderItem);
+            //    productItem.QuantityInStock -= item.Quantity;
+            //}
 
             foreach (var item in basket.Items)
             {
@@ -84,7 +109,7 @@ namespace Application.Orders.Commands.CreateOrder
             };
 
             await _orderRepository.AddAsync(order);
-            await _basketRepository.AddAsync(basket);
+            _basketRepository.Delete(basket);
 
             if (request.SaveAddress)
             {

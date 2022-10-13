@@ -1,4 +1,5 @@
-﻿using Application.Orders.Commands.CreateOrder;
+﻿using Application.Common.DTOs;
+using Application.Orders.Commands.CreateOrder;
 using Application.Orders.Queries.GetOrderById;
 using Application.Orders.Queries.GetOrders;
 using Domain.Entities.OrderAggregate;
@@ -34,9 +35,19 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(CreateOrderCommand command)
+        public async Task<ActionResult<Order>> CreateOrder(CreateOrder order)
         {
-            return CreatedAtAction("GetOrder", await Mediator.Send(command));
+            var command = new CreateOrderCommand()
+            {
+                Username = User?.Identity?.Name,
+                BuyerId = User?.Identity?.Name,
+                SaveAddress = order.SaveAddress,
+                ShippingAddress = order.ShippingAddress
+            };
+
+            var orderId = await Mediator.Send(command);
+
+            return CreatedAtAction("GetOrder", new { id = orderId }, orderId);
         }
     }
 }
