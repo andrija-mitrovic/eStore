@@ -49,35 +49,13 @@ namespace Application.Orders.Commands.CreateOrder
 
             var items = new List<OrderItem>();
 
-            //var productIds = basket.Items.Select(x => x.ProductId);
-            //var productItems = await _productRepository.GetAsync(x => productIds.Contains(x.Id));
-
-            //foreach (var item in basket.Items)
-            //{
-            //    var productItem = productItems.FirstOrDefault(x => x.Id == item.ProductId);
-
-            //    var itemOrdered = new ProductItemOrdered
-            //    {
-            //        ProductId = productItem!.Id,
-            //        Name = productItem.Name,
-            //        PictureUrl = productItem.PictureUrl
-            //    };
-
-            //    var orderItem = new OrderItem
-            //    {
-            //        ItemOrdered = itemOrdered,
-            //        Price = productItem.Price,
-            //        Quantity = item.Quantity
-            //    };
-
-            //    items.Add(orderItem);
-            //    productItem.QuantityInStock -= item.Quantity;
-            //}
+            var productIds = basket.Items.Select(x => x.ProductId);
+            var productItems = await _productRepository.GetAsync(x => productIds.Contains(x.Id));
 
             foreach (var item in basket.Items)
             {
-                var productItem = await _productRepository.GetByIdAsync(item.ProductId);
-                
+                var productItem = productItems.FirstOrDefault(x => x.Id == item.ProductId);
+
                 var itemOrdered = new ProductItemOrdered
                 {
                     ProductId = productItem!.Id,
