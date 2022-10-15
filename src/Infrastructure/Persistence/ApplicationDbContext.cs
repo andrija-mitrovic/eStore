@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Domain.Entities.OrderAggregate;
-using Infrastructure.Identity;
 using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -47,6 +47,38 @@ namespace Application.Orders.Commands.CreateOrder
                 throw new NotFoundException($"{nameof(Basket)} with Buyer Id {request.BuyerId!} was not found.");
             }
 
+            var orderItems = await ReturnOrderItems(basket);
+            var subtotal = orderItems.Sum(item => item.Price * item.Quantity);
+            var deliveryFee = subtotal > DELIVERY_FEE_THRESHOLD ? NO_DELIVERY_FEE : DEFAULT_DELIVERY_FEE;
+
+            var order = new Order
+            {
+                OrderItems = orderItems,
+                BuyerId = request.BuyerId,
+                ShippingAddress = request.ShippingAddress,
+                Subtotal = subtotal,
+                DeliveryFee = deliveryFee,
+            };
+
+            await _orderRepository.AddAsync(order);
+            _basketRepository.Delete(basket);
+
+            if (request.SaveAddress) await AssignUserAddress(request.Username!, request.ShippingAddress!);
+
+            var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
+
+            if (!result)
+            {
+                var message = HelperFunction.GetMethodName() + " - Problem creating order.";
+                _logger.LogError(message);
+                throw new Exception(message);
+            }
+
+            return order.Id;
+        }
+
+        private async Task<List<OrderItem>> ReturnOrderItems(Basket basket)
+        {
             var items = new List<OrderItem>();
 
             var productIds = basket.Items.Select(x => x.ProductId);
@@ -74,36 +106,27 @@ namespace Application.Orders.Commands.CreateOrder
                 productItem.QuantityInStock -= item.Quantity;
             }
 
-            var subtotal = items.Sum(item => item.Price * item.Quantity);
-            var deliveryFee = subtotal > DELIVERY_FEE_THRESHOLD ? NO_DELIVERY_FEE : DEFAULT_DELIVERY_FEE;
+            return items;
+        }
 
-            var order = new Order
+        private async Task AssignUserAddress(string username, ShippingAddress shippingAddress)
+        {
+            var user = await _userRepository.GetByUsername(username);
+
+            if (user == null) throw new NotFoundException($"User with username {username} was not found.");
+
+            user.Address = new UserAddress
             {
-                OrderItems = items,
-                BuyerId = request.BuyerId,
-                ShippingAddress = request.ShippingAddress,
-                Subtotal = subtotal,
-                DeliveryFee = deliveryFee,
+                FullName = shippingAddress?.FullName,
+                Address1 = shippingAddress?.Address1,
+                Address2 = shippingAddress?.Address2,
+                City = shippingAddress?.City,
+                State = shippingAddress?.State,
+                Zip = shippingAddress?.Zip,
+                Country = shippingAddress?.Country
             };
 
-            await _orderRepository.AddAsync(order);
-            _basketRepository.Delete(basket);
-
-            if (request.SaveAddress)
-            {
-                await _userRepository.UpdateUserAddress(request.Username!, request.ShippingAddress!);
-            }
-
-            var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
-
-            if (!result)
-            {
-                var message = HelperFunction.GetMethodName() + " - Problem creating order.";
-                _logger.LogError(message);
-                throw new Exception(message);
-            }
-
-            return order.Id;
+            await _userRepository.AddAsync(user);
         }
     }
 }

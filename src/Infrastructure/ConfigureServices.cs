@@ -1,6 +1,6 @@
 ﻿using Application.Common.Constants;
 using Application.Common.Interfaces;
-using Infrastructure.Identity;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Persistence.Repositories;

@@ -42,7 +42,7 @@ namespace Application.Baskets.Queries.GetBasketByBuyerId
             if (basket == null)
             {
                 _logger.LogError(HelperFunction.GetMethodName() + " - Basket with BuyerId: {BuyerId} was not found.", request.BuyerId);
-                throw new NotFoundException(nameof(Basket), request.BuyerId!);
+                throw new NotFoundException($"{nameof(Basket)} with Buyer Id: {request.BuyerId} was not found.");
             }
 
             return _mapper.Map<BasketDto>(basket);

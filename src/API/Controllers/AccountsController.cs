@@ -3,7 +3,6 @@ using Application.Common.DTOs;
 using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -1,10 +1,8 @@
 ﻿using Application.Common.Constants;
 using Domain.Entities;
-using Role = Infrastructure.Identity.Role;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Infrastructure.Identity;
 
 namespace Infrastructure.Persistence
 {

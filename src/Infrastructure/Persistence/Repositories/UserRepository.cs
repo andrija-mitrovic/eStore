@@ -2,7 +2,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Domain.Entities.OrderAggregate;
-using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
@@ -10,6 +9,11 @@ namespace Infrastructure.Persistence.Repositories
     public class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
     {
         public UserRepository(ApplicationDbContext dbContext) : base(dbContext) { }
+
+        public async Task<ApplicationUser?> GetByUsername(string username)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == username);
+        }
 
         public async Task UpdateUserAddress(string username, ShippingAddress address)
         {

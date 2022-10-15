@@ -1,7 +1,6 @@
-﻿using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Identity
+namespace Domain.Entities
 {
     public sealed class ApplicationUser : IdentityUser<int>
     {
