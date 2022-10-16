@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(loginDto.Username);
 
@@ -42,8 +42,8 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var userBasket = await RetrieveBasket(loginDto.Username!);
-            var anonBasket = await RetrieveBasket(Request.Cookies[CookieConstants.KEY]!);
+            var userBasket = await RetrieveBasket(loginDto.Username!, cancellationToken);
+            var anonBasket = await RetrieveBasket(Request.Cookies[CookieConstants.KEY]!, cancellationToken);
 
             if (anonBasket != null)
             {
@@ -53,7 +53,7 @@ namespace API.Controllers
                 }
                 anonBasket.BuyerId = user.UserName;
                 Response.Cookies.Delete(CookieConstants.KEY);
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             return new UserDto
@@ -92,11 +92,11 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet("currentUser")]
-        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        public async Task<ActionResult<UserDto>> GetCurrentUser(CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(User.Identity?.Name);
 
-            var userBasket = await RetrieveBasket(User?.Identity?.Name!);
+            var userBasket = await RetrieveBasket(User?.Identity?.Name!, cancellationToken);
 
             return new UserDto
             {
@@ -106,7 +106,7 @@ namespace API.Controllers
             };
         }
 
-        private async Task<Basket?> RetrieveBasket(string buyerId)
+        private async Task<Basket?> RetrieveBasket(string buyerId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(buyerId))
             {
@@ -117,7 +117,7 @@ namespace API.Controllers
             return await _context.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
+                .FirstOrDefaultAsync(x => x.BuyerId == buyerId, cancellationToken);
         }
     }
 }

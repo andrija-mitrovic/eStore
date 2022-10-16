@@ -34,7 +34,7 @@ namespace Application.Baskets.Commands.DeleteBasketItem
                 throw new BuyerIdNullException($"{nameof(request.BuyerId)} is null or empty");
             }
 
-            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);
+            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!, cancellationToken);
 
             if (basket == null)
             {
@@ -42,7 +42,7 @@ namespace Application.Baskets.Commands.DeleteBasketItem
                 throw new NotFoundException(nameof(Basket), request.ProductId);
             }
 
-            var product = await _productRepository.GetByIdAsync(request.ProductId);
+            var product = await _productRepository.GetByIdAsync(request.ProductId, cancellationToken);
 
             if (product == null)
             {

@@ -18,7 +18,7 @@ namespace Application.Orders.Queries.GetOrders
         {
             return await _context.Orders.Include(x=>x.OrderItems)
                                         .Where(x=>x.BuyerId == request.BuyerId)
-                                        .ToListAsync();
+                                        .ToListAsync(cancellationToken);
         }
     }
 }

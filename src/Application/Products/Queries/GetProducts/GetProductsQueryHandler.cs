@@ -21,7 +21,7 @@ namespace Application.Products.Queries.GetProducts
 
         public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _context.Products.AsNoTracking().ToListAsync();
+            var products = await _context.Products.AsNoTracking().ToListAsync(cancellationToken);
 
             return _mapper.Map<List<ProductDto>>(products);
         }

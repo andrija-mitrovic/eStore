@@ -10,15 +10,15 @@ namespace API.Controllers
     public class BasketsController : ApiControllerBase
     {
         [HttpGet(Name = "GetBasket")]
-        public async Task<ActionResult<BasketDto>> GetBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket(CancellationToken cancellationToken)
         {
             var buyerId = GetBuyerId();
 
-            return await Mediator.Send(new GetBasketByBuyerIdQuery() { BuyerId = buyerId });
+            return await Mediator.Send(new GetBasketByBuyerIdQuery() { BuyerId = buyerId }, cancellationToken);
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> AddItemToBasket(int productId, int quantity)
+        public async Task<ActionResult<int>> AddItemToBasket(int productId, int quantity, CancellationToken cancellationToken)
         {
             var command = new AddBasketItemCommand()
             {
@@ -27,11 +27,11 @@ namespace API.Controllers
                 BuyerId = GetBuyerId()
             };
 
-            return CreatedAtRoute("GetBasket", await Mediator.Send(command));
+            return CreatedAtRoute("GetBasket", await Mediator.Send(command, cancellationToken));
         }
 
         [HttpDelete]
-        public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
+        public async Task<ActionResult> RemoveBasketItem(int productId, int quantity, CancellationToken cancellationToken)
         {
             var command = new DeleteBasketItemCommand()
             {
@@ -40,7 +40,7 @@ namespace API.Controllers
                 BuyerId = GetBuyerId()
             };
 
-            await Mediator.Send(command);
+            await Mediator.Send(command, cancellationToken);
 
             return NoContent();
         }

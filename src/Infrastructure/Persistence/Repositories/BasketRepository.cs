@@ -8,11 +8,11 @@ namespace Infrastructure.Persistence.Repositories
     {
         public BasketRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 
-        public async Task<Basket?> GetBasketByBuyerId(string buyerId)
+        public async Task<Basket?> GetBasketByBuyerId(string buyerId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Baskets.Include(x => x.Items)
                                            .ThenInclude(x => x.Product)
-                                           .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
+                                           .FirstOrDefaultAsync(x => x.BuyerId == buyerId, cancellationToken);
         }
     }
 }

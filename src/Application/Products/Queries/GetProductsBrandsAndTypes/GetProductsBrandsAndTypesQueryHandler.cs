@@ -15,8 +15,8 @@ namespace Application.Products.Queries.GetProductsBrandsAndTypes
 
         public async Task<object> Handle(GetProductsBrandsAndTypesQuery request, CancellationToken cancellationToken)
         {
-            var brands = await _context.Products.Select(x => x.Brand).Distinct().ToListAsync();
-            var types = await _context.Products.Select(x => x.Type).Distinct().ToListAsync();
+            var brands = await _context.Products.Select(x => x.Brand).Distinct().ToListAsync(cancellationToken);
+            var types = await _context.Products.Select(x => x.Type).Distinct().ToListAsync(cancellationToken);
 
             return new { brands, types };
         }

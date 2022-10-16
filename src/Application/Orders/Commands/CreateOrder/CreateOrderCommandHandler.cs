@@ -39,7 +39,7 @@ namespace Application.Orders.Commands.CreateOrder
 
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);
+            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!, cancellationToken);
 
             if (basket == null)
             {
@@ -47,7 +47,7 @@ namespace Application.Orders.Commands.CreateOrder
                 throw new NotFoundException($"{nameof(Basket)} with Buyer Id {request.BuyerId!} was not found.");
             }
 
-            var orderItems = await ReturnOrderItems(basket);
+            var orderItems = await ReturnOrderItems(basket, cancellationToken);
             var subtotal = orderItems.Sum(item => item.Price * item.Quantity);
             var deliveryFee = subtotal > DELIVERY_FEE_THRESHOLD ? NO_DELIVERY_FEE : DEFAULT_DELIVERY_FEE;
 
@@ -60,10 +60,10 @@ namespace Application.Orders.Commands.CreateOrder
                 DeliveryFee = deliveryFee,
             };
 
-            await _orderRepository.AddAsync(order);
+            await _orderRepository.AddAsync(order, cancellationToken);
             _basketRepository.Delete(basket);
 
-            if (request.SaveAddress) await AssignUserAddress(request.Username!, request.ShippingAddress!);
+            if (request.SaveAddress) await AssignUserAddress(request.Username!, request.ShippingAddress!, cancellationToken);
 
             var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
@@ -77,12 +77,12 @@ namespace Application.Orders.Commands.CreateOrder
             return order.Id;
         }
 
-        private async Task<List<OrderItem>> ReturnOrderItems(Basket basket)
+        private async Task<List<OrderItem>> ReturnOrderItems(Basket basket, CancellationToken cancellationToken)
         {
             var items = new List<OrderItem>();
 
             var productIds = basket.Items.Select(x => x.ProductId);
-            var productItems = await _productRepository.GetAsync(x => productIds.Contains(x.Id));
+            var productItems = await _productRepository.GetAsync(x => productIds.Contains(x.Id), cancellationToken: cancellationToken);
 
             foreach (var item in basket.Items)
             {
@@ -109,9 +109,9 @@ namespace Application.Orders.Commands.CreateOrder
             return items;
         }
 
-        private async Task AssignUserAddress(string username, ShippingAddress shippingAddress)
+        private async Task AssignUserAddress(string username, ShippingAddress shippingAddress, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByUsername(username);
+            var user = await _userRepository.GetByUsername(username, cancellationToken);
 
             if (user == null) throw new NotFoundException($"User with username {username} was not found.");
 
@@ -126,7 +126,7 @@ namespace Application.Orders.Commands.CreateOrder
                 Country = shippingAddress?.Country
             };
 
-            await _userRepository.AddAsync(user);
+            await _userRepository.AddAsync(user, cancellationToken);
         }
     }
 }

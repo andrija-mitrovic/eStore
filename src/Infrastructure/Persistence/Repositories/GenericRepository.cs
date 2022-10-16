@@ -13,26 +13,26 @@ namespace Infrastructure.Persistence.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = true)
+        public async Task<IReadOnlyList<T>> GetAllAsync(bool disableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbContext.Set<T>();
 
             if (disableTracking) query = query.AsNoTracking();
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = true)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbContext.Set<T>();
 
             if (disableTracking) query = query.AsNoTracking();
             if (predicate != null) query = query.Where(predicate);
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, string? includeString, bool disableTracking = true)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, string? includeString, bool disableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbContext.Set<T>();
             if (disableTracking) query = query.AsNoTracking();
@@ -43,10 +43,10 @@ namespace Infrastructure.Persistence.Repositories
 
             if (orderBy != null) return await orderBy(query).ToListAsync();
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<T?>> GetAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, List<Expression<Func<T, object>>>? includes, bool disableTracking = true)
+        public async Task<IReadOnlyList<T?>> GetAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, List<Expression<Func<T, object>>>? includes, bool disableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbContext.Set<T>();
 
@@ -58,17 +58,17 @@ namespace Infrastructure.Persistence.Repositories
 
             if (orderBy != null) return await orderBy(query).ToListAsync();
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            return await _dbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbContext.Set<T>().AddAsync(entity, cancellationToken);
             return entity;
         }
 

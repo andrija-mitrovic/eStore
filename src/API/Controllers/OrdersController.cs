@@ -12,18 +12,18 @@ namespace API.Controllers
     public class OrdersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetOrders()
+        public async Task<ActionResult<List<Order>>> GetOrders(CancellationToken cancellationToken)
         {
             var query = new GetOrdersQuery() 
             { 
                 BuyerId = User?.Identity?.Name 
             };
 
-            return await Mediator.Send(query);
+            return await Mediator.Send(query, cancellationToken);
         }
         
         [HttpGet("{id}", Name = "GetOrder")]
-        public async Task<ActionResult<Order?>> GetOrder(int id)
+        public async Task<ActionResult<Order?>> GetOrder(int id, CancellationToken cancellationToken)
         {
             var query = new GetOrderByIdQuery() 
             { 
@@ -31,11 +31,11 @@ namespace API.Controllers
                 BuyerId = User?.Identity?.Name 
             };
 
-            return await Mediator.Send(query);
+            return await Mediator.Send(query, cancellationToken);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(CreateOrder order)
+        public async Task<ActionResult<Order>> CreateOrder(CreateOrder order, CancellationToken cancellationToken)
         {
             var command = new CreateOrderCommand()
             {
@@ -45,7 +45,7 @@ namespace API.Controllers
                 ShippingAddress = order.ShippingAddress
             };
 
-            var orderId = await Mediator.Send(command);
+            var orderId = await Mediator.Send(command, cancellationToken);
 
             return CreatedAtAction("GetOrder", new { id = orderId }, orderId);
         }

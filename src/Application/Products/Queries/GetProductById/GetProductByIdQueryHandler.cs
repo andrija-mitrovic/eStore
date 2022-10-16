@@ -27,7 +27,7 @@ namespace Application.Products.Queries.GetProductById
 
         public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
-            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (product == null)
             {

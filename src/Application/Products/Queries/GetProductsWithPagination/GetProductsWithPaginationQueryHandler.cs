@@ -32,7 +32,7 @@ namespace Application.Products.Queries.GetProductsWithPagination
                                          .Search(request.SearchTerm)
                                          .Filter(request.Brands, request.Types)
                                          .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                                         .PaginatedListAsync(request.PageNumber, request.PageSize);
+                                         .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
             _httpContextAccessor.HttpContext.Response.AddPaginationHeader(request.PageNumber, request.PageSize, products.TotalCount, products.TotalPages);
 

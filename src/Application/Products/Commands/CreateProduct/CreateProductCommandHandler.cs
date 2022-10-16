@@ -29,7 +29,7 @@ namespace Application.Products.Commands.CreateProduct
         {
             var product = _mapper.Map<Product>(request);
 
-            await _productRepository.AddAsync(product);
+            await _productRepository.AddAsync(product, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

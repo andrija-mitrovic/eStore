@@ -18,7 +18,7 @@ namespace Application.Orders.Queries.GetOrderById
         {
             return await _context.Orders.Include(x => x.OrderItems)
                                         .Where(x => x.BuyerId == request.BuyerId && x.Id == request.Id)
-                                        .FirstOrDefaultAsync();
+                                        .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

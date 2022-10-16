@@ -46,14 +46,11 @@ namespace Application.Baskets.Commands.AddBasketItem
                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(CookieConstants.KEY);
             }
 
-            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!);
+            var basket = await _basketRepository.GetBasketByBuyerId(request.BuyerId!, cancellationToken);
 
-            if (basket == null)
-            {
-                basket = await CreateBasket();
-            }
+            if (basket == null) basket = await CreateBasket(cancellationToken);
 
-            var product = await _productRepository.GetByIdAsync(request.ProductId);
+            var product = await _productRepository.GetByIdAsync(request.ProductId, cancellationToken);
 
             if (product == null)
             {
@@ -75,7 +72,7 @@ namespace Application.Baskets.Commands.AddBasketItem
             return _mapper.Map<BasketDto>(basket);
         }
 
-        private async Task<Basket> CreateBasket()
+        private async Task<Basket> CreateBasket(CancellationToken cancellationToken)
         {
             var buyerId = _httpContextAccessor.HttpContext.User.Identity?.Name;
 
@@ -87,7 +84,7 @@ namespace Application.Baskets.Commands.AddBasketItem
 
             var basket = new Basket { BuyerId = buyerId };
 
-            await _basketRepository.AddAsync(basket);
+            await _basketRepository.AddAsync(basket, cancellationToken);
 
             return basket;
         }

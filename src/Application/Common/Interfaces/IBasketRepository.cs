@@ -4,6 +4,6 @@ namespace Application.Common.Interfaces
 {
     public interface IBasketRepository : IGenericRepository<Basket>
     {
-        public Task<Basket?> GetBasketByBuyerId(string buyerId);
+        public Task<Basket?> GetBasketByBuyerId(string buyerId, CancellationToken cancellationToken = default);
     }
 }
