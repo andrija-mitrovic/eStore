@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, int>, IApplicationDbContext
+    public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Role, int>, IApplicationDbContext
     {
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 

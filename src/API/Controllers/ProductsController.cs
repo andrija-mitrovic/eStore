@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class ProductsController : ApiControllerBase
+    public sealed class ProductsController : ApiControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<List<ProductDto>>> GetProductsWithPagination([FromQuery] GetProductsWithPaginationQuery query, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Models
 {
-    public class PaginationHeader
+    public sealed class PaginationHeader
     {
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }

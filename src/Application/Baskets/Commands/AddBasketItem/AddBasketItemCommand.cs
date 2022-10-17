@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Baskets.Commands.AddBasketItem
 {
-    public class AddBasketItemCommand : IRequest<BasketDto?>
+    public sealed class AddBasketItemCommand : IRequest<BasketDto?>
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }

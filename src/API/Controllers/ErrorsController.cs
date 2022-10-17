@@ -2,7 +2,7 @@
 
 namespace API.Controllers
 {
-    public class ErrorsController : ApiControllerBase
+    public sealed class ErrorsController : ApiControllerBase
     {
         [HttpGet("not-found")]
         public ActionResult GetNotFound()

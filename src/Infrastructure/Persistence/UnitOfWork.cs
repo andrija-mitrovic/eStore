@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Persistence
 {
-    public class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork : IUnitOfWork
     {
         private bool _disposed = false;
         private readonly ApplicationDbContext _context;

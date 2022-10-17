@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContextInitialiser
+    public sealed class ApplicationDbContextInitialiser
     {
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<Role> _roleManager;

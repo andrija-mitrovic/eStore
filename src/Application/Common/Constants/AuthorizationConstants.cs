@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Constants
 {
-    public class AuthorizationConstants
+    public static class AuthorizationConstants
     {
         public const string AUTH_KEY = "AuthKeyOfDoomThatMustBeAMinimumNumberOfBytes";
         public const string DEFAULT_PASSWORD = "Pa$$w0rd";

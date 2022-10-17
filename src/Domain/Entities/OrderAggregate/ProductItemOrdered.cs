@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.OrderAggregate
 {
-    public class ProductItemOrdered
+    public sealed class ProductItemOrdered
     {
         public int ProductId { get; set; }
         public string? Name { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Exceptions
 {
-    public class BuyerIdNullException : Exception
+    public sealed class BuyerIdNullException : Exception
     {
         public BuyerIdNullException() : base()
         {

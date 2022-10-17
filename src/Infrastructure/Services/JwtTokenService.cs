@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Infrastructure.Services
 {
-    public sealed class JwtTokenService : ITokenService
+    internal sealed class JwtTokenService : ITokenService
     {
         private const int EXPIRY_DAYS = 7;
         private readonly UserManager<ApplicationUser> _userManager;

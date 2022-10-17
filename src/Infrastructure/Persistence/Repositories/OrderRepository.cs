@@ -3,7 +3,7 @@ using Domain.Entities.OrderAggregate;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class OrderRepository : GenericRepository<Order>, IOrderRepository
+    internal sealed class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         public OrderRepository(ApplicationDbContext dbContext) : base(dbContext) { }
     }

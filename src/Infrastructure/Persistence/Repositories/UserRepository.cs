@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
+    internal sealed class UserRepository : GenericRepository<ApplicationUser>, IUserRepository
     {
         public UserRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 

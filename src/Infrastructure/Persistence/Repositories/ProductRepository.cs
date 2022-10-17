@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ProductRepository : GenericRepository<Product>, IProductRepository
+    internal sealed class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         public ProductRepository(ApplicationDbContext dbContext) : base(dbContext) { }
     }

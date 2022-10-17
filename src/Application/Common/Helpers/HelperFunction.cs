@@ -2,7 +2,7 @@
 
 namespace Application.Common.Helpers
 {
-    public class HelperFunction
+    public static class HelperFunction
     {
         public static string GetMethodName([CallerMemberName] string memberName = "")
         {

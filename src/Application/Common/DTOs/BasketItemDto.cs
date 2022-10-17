@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.DTOs
 {
-    public class BasketItemDto
+    public sealed class BasketItemDto
     {
         public int ProductId { get; set; }
         public string? Name { get; set; }

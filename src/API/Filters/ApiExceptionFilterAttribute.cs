@@ -40,12 +40,10 @@ namespace API.Filters
             if (_exceptionHandlers.ContainsKey(type))
             {
                 _exceptionHandlers[type].Invoke(context);
-                return;
             }
             else
             {
                 HandleInternalServerError(context);
-                return;
             }
         }
 

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Baskets.Commands.DeleteBasketItem
 {
-    public class DeleteBasketItemCommandHandler : IRequestHandler<DeleteBasketItemCommand>
+    internal sealed class DeleteBasketItemCommandHandler : IRequestHandler<DeleteBasketItemCommand>
     {
         private readonly IBasketRepository _basketRepository;
         private readonly IProductRepository _productRepository;

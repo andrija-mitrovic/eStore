@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class BasketRepository : GenericRepository<Basket>, IBasketRepository
+    internal sealed class BasketRepository : GenericRepository<Basket>, IBasketRepository
     {
         public BasketRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 

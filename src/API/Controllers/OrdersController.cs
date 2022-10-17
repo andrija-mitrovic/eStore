@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    public class OrdersController : ApiControllerBase
+    public sealed class OrdersController : ApiControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<List<Order>>> GetOrders(CancellationToken cancellationToken)

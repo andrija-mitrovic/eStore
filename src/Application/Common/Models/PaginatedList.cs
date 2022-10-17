@@ -2,7 +2,7 @@
 
 namespace Application.Common.Models
 {
-    public class PaginatedList<T>
+    public sealed class PaginatedList<T>
     {
         public List<T>? Items { get; }
         public int PageNumber { get; }

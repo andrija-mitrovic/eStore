@@ -2,7 +2,7 @@
 
 namespace Application.Baskets.Commands.DeleteBasketItem
 {
-    public class DeleteBasketItemCommand : IRequest
+    public sealed class DeleteBasketItemCommand : IRequest
     {
         public string? BuyerId { get; set; }
         public int ProductId { get; set; }

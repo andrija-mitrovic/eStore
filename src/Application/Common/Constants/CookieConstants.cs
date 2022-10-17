@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Constants
 {
-    public class CookieConstants
+    public static class CookieConstants
     {
         public const string KEY = "buyerId";
     }

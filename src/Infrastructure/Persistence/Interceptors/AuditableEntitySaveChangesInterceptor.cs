@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Infrastructure.Persistence.Interceptors
 {
-    public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
+    public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;

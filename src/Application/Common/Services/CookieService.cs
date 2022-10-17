@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Common.Services
 {
-    public class CookieService : ICookieService
+    public sealed class CookieService : ICookieService
     {
         private const int EXPIRY_DAYS = 30;
 

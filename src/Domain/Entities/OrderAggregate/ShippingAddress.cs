@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.OrderAggregate
 {
-    public class ShippingAddress : Address
+    public sealed class ShippingAddress : Address
     {
 
     }

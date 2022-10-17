@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.DTOs
 {
-    public class UserDto
+    public sealed class UserDto
     {
         public string? Email { get; set; }
         public string? Token { get; set; }

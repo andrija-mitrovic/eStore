@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class BasketsController : ApiControllerBase
+    public sealed class BasketsController : ApiControllerBase
     {
         [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket(CancellationToken cancellationToken)

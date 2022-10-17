@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Baskets.Queries.GetBasketByBuyerId
 {
-    public class GetBasketByBuyerIdQueryHandler : IRequestHandler<GetBasketByBuyerIdQuery, BasketDto>
+    internal sealed class GetBasketByBuyerIdQueryHandler : IRequestHandler<GetBasketByBuyerIdQuery, BasketDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
