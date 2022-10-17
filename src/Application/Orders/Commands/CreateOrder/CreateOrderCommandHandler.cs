@@ -71,7 +71,7 @@ namespace Application.Orders.Commands.CreateOrder
             {
                 var message = HelperFunction.GetMethodName() + " - Problem creating order.";
                 _logger.LogError(message);
-                throw new Exception(message);
+                throw new OrderException(message);
             }
 
             return order.Id;

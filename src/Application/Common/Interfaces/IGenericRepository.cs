@@ -11,7 +11,7 @@ namespace Application.Common.Interfaces
 		Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate,
 										Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy,
 										string? includeString,
-										bool disableTracking,
+										bool disableTracking = true,
 										CancellationToken cancellationToken = default);
 		Task<IReadOnlyList<T?>> GetAsync(Expression<Func<T, bool>>? predicate,
 										 Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy,

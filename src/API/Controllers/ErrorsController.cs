@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Common.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -33,7 +34,7 @@ namespace API.Controllers
         [HttpGet("server-error")]
         public ActionResult GetServerError()
         {
-            throw new Exception("This is a server error");
+            throw new ServerException("This is a server error");
         }
     }
 }
