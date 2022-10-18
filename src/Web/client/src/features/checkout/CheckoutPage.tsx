@@ -8,10 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { FieldValue, FieldValues, FormProvider, useForm } from "react-hook-form";
+import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { validationSchema } from "./checkoutValidation";
 
 const steps = ["Shipping address", "Review your order", "Payment details"];
 
@@ -29,12 +31,15 @@ function getStepContent(step: number) {
 }
 
 export default function CheckoutPage() {
-  const methods = useForm();
+  const methods = useForm({
+    mode: "all",
+    resolver: yupResolver(validationSchema),
+  });
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = (data: FieldValues) => {
-    if(activeStep === 0){
-        console.log(data);
+    if (activeStep === 0) {
+      console.log(data);
     }
     setActiveStep(activeStep + 1);
   };
@@ -81,8 +86,9 @@ export default function CheckoutPage() {
                   </Button>
                 )}
                 <Button
+                  disabled={!methods.formState.isValid}
                   variant="contained"
-                  type='submit'
+                  type="submit"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
                 >
