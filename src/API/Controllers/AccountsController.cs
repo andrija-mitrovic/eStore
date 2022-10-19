@@ -106,6 +106,17 @@ namespace API.Controllers
             };
         }
 
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress?>> GetSavedAddress()
+        {
+            var username=User.Identity?.Name;
+            
+            return await _userManager.Users.Where(x=>x.UserName==username)
+                                           .Select(user=>user.Address)
+                                           .FirstOrDefaultAsync();
+        }
+
         private async Task<Basket?> RetrieveBasket(string buyerId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(buyerId))

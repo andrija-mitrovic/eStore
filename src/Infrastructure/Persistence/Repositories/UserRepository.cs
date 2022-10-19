@@ -10,7 +10,7 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<ApplicationUser?> GetByUsername(string username, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == username, cancellationToken);
+            return await _dbContext.Users.Include(x => x.Address).FirstOrDefaultAsync(x => x.UserName == username, cancellationToken);
         }
     }
 }

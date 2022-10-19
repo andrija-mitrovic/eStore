@@ -125,8 +125,6 @@ namespace Application.Orders.Commands.CreateOrder
                 Zip = shippingAddress?.Zip,
                 Country = shippingAddress?.Country
             };
-
-            await _userRepository.AddAsync(user, cancellationToken);
         }
     }
 }
