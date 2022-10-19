@@ -29,7 +29,10 @@ namespace Application.Common.Mappings
                 .ForMember(x => x.Total, y => { y.MapFrom(z => z.GetTotal()); })
                 .ReverseMap();
 
-            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(x => x.Name, y => { y.MapFrom(z => z.ItemOrdered!.Name); })
+                .ForMember(x => x.PictureUrl, y => { y.MapFrom(z => z.ItemOrdered!.PictureUrl); })
+                .ReverseMap();
         }
     }
 }
