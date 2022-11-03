@@ -12,6 +12,6 @@ namespace API.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public new string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
